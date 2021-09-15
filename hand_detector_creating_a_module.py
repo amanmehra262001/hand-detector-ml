@@ -14,6 +14,8 @@ class handdetector:
                                     ,self.min_detection_confidence,self.min_tracking_confidence)
 
         self.mpDraw = mp.solutions.drawing_utils
+        self.tipId=[4,8,12,16,20]
+
 #--------------------------------So initialization is done now moving to hand detection part---------------------
     def findhands(self, img , draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -55,7 +57,20 @@ class handdetector:
 
         return length,img,[x1,y1,x2,y2,cx,cy]
 
-
+    def fingerup(self):
+        fingers = []
+        if len(self.lmlist) != 0:
+            if self.lmlist[self.tipId[0]][1] < self.lmlist[self.tipId[0] - 1][1]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+            for id in range(1, 5):
+                if self.lmlist[self.tipId[id]][2] < self.lmlist[self.tipId[id] - 2][2]:
+                    fingers.append(1)
+                else:
+                    fingers.append(0)
+            # print(fingers)
+            return fingers
 
 def main():
     pTime = 0
